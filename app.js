@@ -254,7 +254,9 @@ function renderActions() {
     btn.innerHTML = `
       <div class="action-main-row">
         <div class="action-name">${a.name}</div>
-        <div class="action-points">+${a.basePoints} pts</div>
+        <div class="action-points">
+           ${a.basePoints > 0 ? "+" : ""}${a.basePoints} pts
+        </div>
       </div>
       <div class="action-meta-row">
         <div class="badge">
@@ -610,10 +612,11 @@ modalSaveBtn.addEventListener("click", () => {
     if (!action) return;
 
     const basePoints = Number(modalPointsInput.value || 0);
-    if (!basePoints || basePoints <= 0) {
-      alert("Base points must be a positive number.");
-      return;
-    }
+    if (isNaN(basePoints)) {
+                alert("Base points must be a number.");
+                return;
+          }
+
 
     const category = modalCategoryInput.value.trim() || "Uncategorized";
 
@@ -678,10 +681,10 @@ addActionBtn.addEventListener("click", () => {
   const category = actionCategoryInput.value.trim();
   const color = actionColorInput.value || "#38bdf8";
 
-  if (!name || basePoints <= 0) {
-    alert("Please provide an action name and a positive base points value.");
-    return;
-  }
+  if (!name || isNaN(basePoints)) {
+          alert("Please provide an action name and a numeric base points value.");
+          return;
+     }
 
   const newAction = {
     id: randomId("a"),
