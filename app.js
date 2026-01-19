@@ -407,39 +407,42 @@ function renderSettingsActions() {
     row.appendChild(info);
     row.appendChild(controls);
 
-    // Drag events
-    handle.addEventListener("mousedown", () => {
+    // --- DRAG EVENTS ---
+
+    // Start dragging
+    row.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", index.toString());
       row.classList.add("dragging");
     });
-    row.addEventListener("dragstart", (e) => {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", index.toString());
-    });
+
+    // End dragging
     row.addEventListener("dragend", () => {
       row.classList.remove("dragging");
     });
 
+    // Allow dropping
     row.addEventListener("dragover", (e) => {
       e.preventDefault();
-      const draggingIndex = Number(
-        e.dataTransfer.getData("text/plain") || "-1"
-      );
-      if (draggingIndex === -1) return;
-      const targetIndex = Number(row.dataset.index || "-1");
-      if (targetIndex === -1 || targetIndex === draggingIndex) return;
+    });
 
-      // Reorder array
-      const item = state.actions.splice(draggingIndex, 1)[0];
-      state.actions.splice(targetIndex, 0, item);
+    // Handle drop (actual reordering happens here)
+    row.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const fromIndex = Number(e.dataTransfer.getData("text/plain"));
+      const toIndex = Number(row.dataset.index);
+
+      if (fromIndex === toIndex) return;
+
+      const item = state.actions.splice(fromIndex, 1)[0];
+      state.actions.splice(toIndex, 0, item);
+
       saveState();
       renderSettingsActions();
       renderActions();
     });
 
     // Edit
-    editBtn.addEventListener("click", () => {
-      openModalForAction(a);
-    });
+    editBtn.addEventListener("click", () => openModalForAction(a));
 
     // Delete
     deleteBtn.addEventListener("click", () => {
@@ -453,6 +456,7 @@ function renderSettingsActions() {
     settingsActionsListEl.appendChild(row);
   });
 }
+
 
 function renderSettingsMultipliers() {
   settingsMultipliersListEl.innerHTML = "";
@@ -499,41 +503,39 @@ function renderSettingsMultipliers() {
     row.appendChild(info);
     row.appendChild(controls);
 
-    // Drag events
-    handle.addEventListener("mousedown", () => {
+    // --- DRAG EVENTS ---
+
+    row.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", index.toString());
       row.classList.add("dragging");
     });
-    row.addEventListener("dragstart", (e) => {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", index.toString());
-    });
+
     row.addEventListener("dragend", () => {
       row.classList.remove("dragging");
     });
 
     row.addEventListener("dragover", (e) => {
       e.preventDefault();
-      const draggingIndex = Number(
-        e.dataTransfer.getData("text/plain") || "-1"
-      );
-      if (draggingIndex === -1) return;
-      const targetIndex = Number(row.dataset.index || "-1");
-      if (targetIndex === -1 || targetIndex === draggingIndex) return;
+    });
 
-      const item = state.multipliers.splice(draggingIndex, 1)[0];
-      state.multipliers.splice(targetIndex, 0, item);
+    row.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const fromIndex = Number(e.dataTransfer.getData("text/plain"));
+      const toIndex = Number(row.dataset.index);
+
+      if (fromIndex === toIndex) return;
+
+      const item = state.multipliers.splice(fromIndex, 1)[0];
+      state.multipliers.splice(toIndex, 0, item);
+
       saveState();
       renderSettingsMultipliers();
       renderMultipliers();
       renderTotals();
     });
 
-    // Edit
-    editBtn.addEventListener("click", () => {
-      openModalForMultiplier(m);
-    });
+    editBtn.addEventListener("click", () => openModalForMultiplier(m));
 
-    // Delete
     deleteBtn.addEventListener("click", () => {
       if (!confirm(`Delete multiplier "${m.name}"?`)) return;
       state.multipliers = state.multipliers.filter((x) => x.id !== m.id);
@@ -546,6 +548,7 @@ function renderSettingsMultipliers() {
     settingsMultipliersListEl.appendChild(row);
   });
 }
+
 
 // --- Modal logic -------------------------------------------------------
 
