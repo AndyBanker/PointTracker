@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Custom Action Points Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="app-title">
+        <h1>
+          <span class="logo-dot"></span>
+          Custom Action Points
+        </h1>
+        <p>Create your own actions, multipliers, and category-based daily scores.</p>
+      </div>
+      <div class="today-pill">
+        <span class="dot"></span>
+        <span id="todayLabel"></span>
+      </div>
+    </header>
+
+
+
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard">
+      <main class="main-column">
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Today’s Score</div>
+              <div class="card-subtitle">
+                Tap an action button to add points, multiplied by active toggles.
+              </div>
+            </div>
+            <div class="pill">
+              <span>Multiplier:</span>
+              <strong id="currentMultiplierDisplay">×1.0</strong>
+            </div>
+          </div>
+
+          <div class="totals-row">
+            <div class="total-card">
+              <div class="total-label">Total Points</div>
+              <div class="total-value">
+                <span id="todayTotalPoints">0</span>
+                <span class="unit">pts</span>
+              </div>
+              <div class="total-chip-row">
+                <div class="chip">
+                  <span class="dot"></span>
+                  <span>Base actions × active multipliers</span>
+                </div>
+              </div>
+            </div>
+            <div class="total-card">
+              <div class="total-label">Categories Today</div>
+              <div class="total-value">
+                <span id="todayCategoryCount">0</span>
+                <span class="unit">cats</span>
+              </div>
+              <div class="total-chip-row" id="todayCategoryChips"></div>
+            </div>
+          </div>
+
+          <div class="section-label">Multipliers</div>
+          <div class="multiplier-row" id="multiplierRow"></div>
+
+          <div class="section-label">Actions</div>
+          <div class="actions-grid" id="actionsGrid"></div>
+        </section>
+      </main>
+
+      <aside class="side-column">
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Daily Log</div>
+              <div class="card-subtitle">
+                Per-day totals and category breakdowns.
+              </div>
+            </div>
+            <button class="btn btn-danger" id="clearAllDataBtn">
+              <span class="icon">🗑</span>
+              Clear all
+            </button>
+          </div>
+
+          <div class="side-card-content">
+            <ul class="log-list" id="dailyLogList"></ul>
+            <p class="small-note">
+              <span class="inline">
+                Data is stored locally in your browser using
+                <span class="highlight">localStorage</span>.
+              </span>
+            </p>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <nav class="tab-bar">
+      <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+      <button class="tab-button" data-tab="settings">Settings</button>
+    </nav>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" style="display:none;">
+      <main class="main-column">
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Manage Actions</div>
+              <div class="card-subtitle">Reorder, edit, or delete your actions.</div>
+            </div>
+            <button class="btn btn-ghost" id="resetActionsBtn">
+              <span class="icon">↺</span>
+              Reset to demo
+            </button>
+          </div>
+
+          <div id="settingsActionsList"></div>
+
+          <div class="divider"></div>
+
+          <h4 class="section-label">Add New Action</h4>
+          <div class="form-row">
+            <div class="field">
+              <label for="actionNameInput">Action name</label>
+              <input
+                id="actionNameInput"
+                type="text"
+                placeholder="e.g. Deep work block"
+              />
+            </div>
+            <div class="field">
+              <label for="actionPointsInput">Base points</label>
+              <input
+                id="actionPointsInput"
+                type="number"
+                min="1"
+                step="1"
+                placeholder="e.g. 10"
+              />
+            </div>
+            <div class="field">
+              <label for="actionCategoryInput">Category</label>
+              <input
+                id="actionCategoryInput"
+                type="text"
+                placeholder="e.g. Focus, Health, Social"
+              />
+            </div>
+            <div class="field">
+              <label for="actionColorInput">Accent color</label>
+              <input id="actionColorInput" type="color" value="#38bdf8" />
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-top: 10px; justify-content: flex-end">
+            <button class="btn btn-primary" id="addActionBtn">
+              <span class="icon">＋</span>
+              Add action
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <aside class="side-column">
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Manage Multipliers</div>
+              <div class="card-subtitle">Reorder, edit, or delete multipliers.</div>
+            </div>
+            <button class="btn btn-ghost" id="resetMultipliersBtn">
+              <span class="icon">↺</span>
+              Reset to demo
+            </button>
+          </div>
+
+          <div id="settingsMultipliersList"></div>
+
+          <div class="divider"></div>
+
+          <h4 class="section-label">Add New Multiplier</h4>
+          <div class="form-row">
+            <div class="field">
+              <label for="multiplierNameInput">Multiplier name</label>
+              <input
+                id="multiplierNameInput"
+                type="text"
+                placeholder="e.g. Power hour"
+              />
+            </div>
+            <div class="field">
+              <label for="multiplierValueInput">Value (×)</label>
+              <input
+                id="multiplierValueInput"
+                type="number"
+                min="0.1"
+                step="0.1"
+                placeholder="e.g. 1.5"
+              />
+            </div>
+            <div class="field">
+              <label for="multiplierColorInput">Accent color</label>
+              <input id="multiplierColorInput" type="color" value="#f97316" />
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-top: 10px; justify-content: flex-end">
+            <button class="btn btn-primary" id="addMultiplierBtn">
+              <span class="icon">＋</span>
+              Add multiplier
+            </button>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <!-- MODAL OVERLAY -->
+  <div id="modalOverlay" class="modal-overlay hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="modalTitle">Edit</h2>
+          <button class="modal-close-btn" id="modalCloseBtn">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="field">
+              <label for="modalNameInput">Name</label>
+              <input id="modalNameInput" type="text" />
+            </div>
+          </div>
+          <div class="form-row" id="modalPointsRow">
+            <div class="field">
+              <label for="modalPointsInput">Base points</label>
+              <input id="modalPointsInput" type="number" min="1" step="1" />
+            </div>
+          </div>
+          <div class="form-row" id="modalCategoryRow">
+            <div class="field">
+              <label for="modalCategoryInput">Category</label>
+              <input id="modalCategoryInput" type="text" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="modalColorInput">Accent color</label>
+              <input id="modalColorInput" type="color" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="modalCancelBtn">Cancel</button>
+          <button class="btn btn-primary" id="modalSaveBtn">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
