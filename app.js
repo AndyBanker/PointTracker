@@ -32,14 +32,14 @@ const defaultState = {
   multipliers: [
     {
       id: "m1",
-      name: "Mult A (Example)",
+      name: "eg. Multiplier A",
       value: 2.0,
       color: "#f97316",
       active: false
     },
     {
       id: "m2",
-      name: "Mult B (Example)",
+      name: "eg. Multiplier B",
       value: 1.5,
       color: "#a855f7",
       active: false
