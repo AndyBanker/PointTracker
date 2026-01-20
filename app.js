@@ -6,40 +6,40 @@ const defaultState = {
   actions: [
     {
       id: "a1",
-      name: "Deep work (25 min)",
+      name: "Action A (example)",
       basePoints: 10,
-      category: "Focus",
+      category: "Group 1 (example)",
       color: "#38bdf8",
       countToday: 0
     },
     {
       id: "a2",
-      name: "Workout session",
+      name: "Action B (example)",
       basePoints: 20,
-      category: "Health",
+      category: "Group 2 (example)",
       color: "#22c55e",
       countToday: 0
     },
     {
       id: "a3",
-      name: "Social connection",
+      name: "Action C (example)",
       basePoints: 8,
-      category: "Social",
-      color: "#f97316",
+      category: "Group 2 (example)l",
+      color: "#22c55e",
       countToday: 0
     }
   ],
   multipliers: [
     {
       id: "m1",
-      name: "Power hour",
+      name: "Mult A (Example)",
       value: 2.0,
       color: "#f97316",
       active: false
     },
     {
       id: "m2",
-      name: "Flow state",
+      name: "Mult B (Example)",
       value: 1.5,
       color: "#a855f7",
       active: false
